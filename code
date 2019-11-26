@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void incializar(int matriz[][4]);
+void mostrar(int matriz[][4]);
+void inserir_num(int matriz[][4], int aleatorio);
+int contar_vazios(int matriz[][4]);
+int aleatorio(int vazios);
+
+
+int main(void){
+    system("clear");
+    int matriz[4][4], jogo = 0, l , c; 
+    unsigned short vazios = 0, n, i;
+    char jogada = ' ';
+    srand(time(NULL));
+
+    
+    printf("Deseja jogar?\n1 - sim\n2 - não\n");
+    scanf("%d",&jogo);
+    while(jogo > 2 || jogo < 1){
+        printf("Digite apenas 1 ou 2\n");
+        printf("Deseja jogar?\n1 - sim\n2 - não\n");
+        scanf("%d",&jogo);
+    }
+    incializar(matriz);
+    getchar();
+    
+    while(jogo == 1){
+        vazios = contar_vazios(matriz);
+        if(vazios > 2){
+            n = (rand()%2)+1;
+            for(i = 0; i < n; i++){
+                inserir_num(matriz, aleatorio(vazios));
+            }
+        }else if(vazios == 1 || vazios == 2){
+            inserir_num(matriz, aleatorio(vazios));
+        }
+        vazios = contar_vazios(matriz);
+        mostrar(matriz);
+        if(vazios == 0){
+            printf("Você perdeu\n");
+            return 1;
+        }
+        scanf("%c", &jogada);
+        getchar();
+        while(jogada != 'w' && jogada != 'W' && jogada != 's' && jogada != 'S' && jogada != 'd' && jogada != 'D' && jogada != 'a' && jogada != 'A'){
+            printf("Apenas w a s d\n");
+            scanf("%c", &jogada);
+            getchar();
+        }
+        switch(jogada){
+            case 'W':
+            case 'w':
+            break;
+            case 'A':
+            case 'a':
+            for(l = 0; l < 4; l++){
+                for(c = 0; c < 4; c++){
+
+                }
+            }
+            break;
+            case 'S':
+            case 's':
+            break;
+            case 'D':
+            case 'd':
+            break;
+            default:
+            break;
+        }
+        
+    }
+    
+    
+    return 0;
+}
+
+void incializar(int matriz[][4]){
+    for(int l = 0; l < 4; l++){
+        for(int c = 0; c < 4; c++){
+            matriz[l][c] = 0;
+        }
+    }
+}
+
+void mostrar(int matriz[][4]){
+    system("clear");
+    for(int l = 0; l < 4; l++){
+        for(int c = 0; c < 4; c++){
+            printf("%d ",matriz[l][c]);
+        }
+        printf("\n");
+    }
+}
+
+int contar_vazios(int matriz[][4]){
+    int vazios = 0;
+    for(int l = 0; l < 4; l++){
+        for(int c = 0; c < 4; c++){
+            if(matriz[l][c] == 0) vazios ++; 
+        } 
+    }
+    return vazios;   
+}
+void inserir_num(int matriz[][4], int aleatorio){
+    for(int l = 0; l < 4; l++){
+        for(int c = 0; c < 4; c++){
+            
+            if(matriz[l][c] == 0){
+                if(aleatorio == 0){
+                    matriz[l][c] = 2;
+                    return ;
+                }else{
+                    aleatorio--;
+                }
+            } 
+        }
+    }
+}
+
+int aleatorio(int vazios){    
+    return rand()%vazios;
+}
