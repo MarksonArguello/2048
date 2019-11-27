@@ -50,23 +50,94 @@ int main(void){
             scanf("%c", &jogada);
             getchar();
         }
-        switch(jogada){
+        switch(jogada){ //fiquei confuso em relação aos argumentos das funções
             case 'W':
             case 'w':
+            for(c = 0; c < TABULEIRO; c++){
+            	for(l = 0; l < TABULEIRO; l++){
+					if(matriz[l][c] != 0){
+						int t_pos = l-1, num_pos = l, valor = matriz[l][c]; 
+						while(t_pos >= 0){                                  
+							if(matriz[t_pos][c] == 0){
+								matriz[t_pos][c] = matriz[num_pos][c];      
+								matriz[num_pos][c] = 0;
+								num_pos--;
+							} else if(matriz[t_pos][c] == valor) {
+								matriz[t_pos][c] += matriz[num_pos][c];
+								matriz[num_pos][c] = 0;                     
+								num_pos = t_pos;
+							}
+							t_pos--;
+						}
+					}
+				}
+        	}            
             break;
             case 'A':
             case 'a':
-            for(l = 0; l < 4; l++){
-                for(c = 0; c < 4; c++){
-
-                }
-            }
+            for(l = 0; l < TABULEIRO; l++){
+            	for(c = 0; c < TABULEIRO; c++){ //checando cada coluna de cada linha
+					if(matriz[l][c] != 0){
+						int t_pos = c-1, num_pos = c, valor = matriz[l][c]; //variaveis temporarias para checagem da posição/valor do numero
+						while(t_pos >= 0){                                  //movimentar da posição anterior até a inicial na linha
+							if(matriz[l][t_pos] == 0){
+								matriz[l][t_pos] = matriz[l][num_pos];      //checa se é zero e substitui
+								matriz[l][num_pos] = 0;
+								num_pos--;
+							} else if(matriz[l][t_pos] == valor) {
+								matriz[l][t_pos] += matriz[l][num_pos];
+								matriz[l][num_pos] = 0;                     //checa se é igual e soma
+								num_pos = t_pos;
+							}
+							t_pos--;
+						}
+					}
+				}
+        	}
             break;
             case 'S':
             case 's':
+            for(c = 0; c < TABULEIRO-1; c++){
+            	for(l = 0; l < TABULEIRO; l++){
+					if(matriz[l][c] != 0){
+						int t_pos = l+1, num_pos = l, valor = matriz[l][c]; 
+						while(t_pos <= TABULEIRO){                                  
+							if(matriz[t_pos][c] == 0){
+								matriz[t_pos][c] = matriz[num_pos][c];      
+								matriz[num_pos][c] = 0;
+								num_pos++;
+							} else if(matriz[t_pos][c] == valor) {
+								matriz[t_pos][c] += matriz[num_pos][c];
+								matriz[num_pos][c] = 0;                     
+								num_pos = t_pos;
+							}
+							t_pos++;
+						}
+					}
+				}
+        	}               
             break;
             case 'D':
             case 'd':
+            for(l = 0; l < TABULEIRO; l++){
+            	for(c = 0; c < TABULEIRO; c++){ 
+					if(matriz[l][c] != 0){
+						int t_pos = c+1, num_pos = c, valor = matriz[l][c]; 
+						while(t_pos <= TABULEIRO-1){                                 
+							if(matriz[l][t_pos] == 0){
+								matriz[l][t_pos] = matriz[l][num_pos];      
+								matriz[l][num_pos] = 0;
+								num_pos++;
+							} else if(matriz[l][t_pos] == valor) {
+								matriz[l][t_pos] += matriz[l][num_pos];
+								matriz[l][num_pos] = 0;                     
+								num_pos = t_pos;
+							}
+							t_pos++;
+						}
+					}
+				}
+        	}            
             break;
             default:
             break;
