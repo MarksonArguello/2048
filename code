@@ -1,25 +1,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#define TABULEIRO 4
 
-void incializar(int matriz[][4]);
-void mostrar(int matriz[][4]);
-void inserir_num(int matriz[][4], int aleatorio);
-int contar_vazios(int matriz[][4]);
+void incializar(int matriz[][TABULEIRO]);
+void mostrar(int matriz[][TABULEIRO]);
+void inserir_num(int matriz[][TABULEIRO], int aleatorio);
+int contar_vazios(int matriz[][TABULEIRO]);
 int aleatorio(int vazios);
-
+void mover_esquerda (int matriz[][TABULEIRO]); 
+void mover_direita (int matriz[][TABULEIRO]);  
+void mover_cima (int matriz[][TABULEIRO]);     
+void mover_baixo (int matriz[][TABULEIRO]);    
 
 int main(void){
     system("clear");
-    int matriz[4][4], jogo = 0, l , c; 
+    int matriz[TABULEIRO][TABULEIRO], jogo = 0; 
     unsigned short vazios = 0, n, i;
     char jogada = ' ';
-    srand(time(NULL));
+    srand(clock());
 
     
     printf("Deseja jogar?\n1 - sim\n2 - não\n");
     scanf("%d",&jogo);
-    while(jogo > 2 || jogo < 1){
+    while(jogo != 2 && jogo != 1){
         printf("Digite apenas 1 ou 2\n");
         printf("Deseja jogar?\n1 - sim\n2 - não\n");
         scanf("%d",&jogo);
@@ -53,61 +57,69 @@ int main(void){
         switch(jogada){
             case 'W':
             case 'w':
+		        mover_cima (matriz);           
             break;
             case 'A':
             case 'a':
-            for(l = 0; l < 4; l++){
-                for(c = 0; c < 4; c++){
-
-                }
-            }
+		        mover_esquerda (matriz);
             break;
             case 'S':
             case 's':
+		        mover_baixo (matriz);             
             break;
             case 'D':
             case 'd':
+		        mover_direita (matriz);     
             break;
             default:
+                printf("Você só pode mover usando W,A,S,D");
             break;
         }
         
-    }
-    
-    
-    return 0;
-}
+    } 
 
-void incializar(int matriz[][4]){
-    for(int l = 0; l < 4; l++){
-        for(int c = 0; c < 4; c++){
+
+    return 0; // Fim da função main
+}
+// inicio das funções 
+void incializar(int matriz[][TABULEIRO]){
+    for(int l = 0; l < TABULEIRO; l++){
+        for(int c = 0; c < TABULEIRO; c++){
             matriz[l][c] = 0;
         }
     }
 }
 
-void mostrar(int matriz[][4]){
+void mostrar(int matriz[][TABULEIRO]){
     system("clear");
-    for(int l = 0; l < 4; l++){
-        for(int c = 0; c < 4; c++){
-            printf("%d ",matriz[l][c]);
+    puts("/------|------|------|------\\");
+    for(int l = 0; l < TABULEIRO; l++){
+        for(int c = 0; c < TABULEIRO; c++){
+            if(matriz[l][c] == 0) printf("|      ",matriz[l][c]);
+            if(matriz[l][c] > 0 && matriz[l][c] < 10) printf("|     %d",matriz[l][c]);
+            if(matriz[l][c] > 10 && matriz[l][c] < 100) printf("|    %d",matriz[l][c]);
+            if(matriz[l][c] > 100 && matriz[l][c] < 1000) printf("|   %d",matriz[l][c]);
+            if(matriz[l][c] > 1000) printf("|   %d",matriz[l][c]);
         }
-        printf("\n");
+        printf("|\n");
+        if(l != 3 )printf("|------|------|------|------|\n");
     }
+    puts("\\------|------|------|------/");
 }
 
-int contar_vazios(int matriz[][4]){
+int contar_vazios(int matriz[][TABULEIRO]){
     int vazios = 0;
-    for(int l = 0; l < 4; l++){
-        for(int c = 0; c < 4; c++){
+    for(int l = 0; l < TABULEIRO; l++){
+        for(int c = 0; c < TABULEIRO; c++){
             if(matriz[l][c] == 0) vazios ++; 
         } 
     }
     return vazios;   
 }
-void inserir_num(int matriz[][4], int aleatorio){
-    for(int l = 0; l < 4; l++){
-        for(int c = 0; c < 4; c++){
+
+void inserir_num(int matriz[][TABULEIRO], int aleatorio){
+    for(int l = 0; l < TABULEIRO; l++){
+        for(int c = 0; c < TABULEIRO; c++){
             
             if(matriz[l][c] == 0){
                 if(aleatorio == 0){
@@ -123,4 +135,109 @@ void inserir_num(int matriz[][4], int aleatorio){
 
 int aleatorio(int vazios){    
     return rand()%vazios;
+}
+
+void mover_esquerda (int matriz[][TABULEIRO]) {
+    int soma[] = {0, 0, 0, 0};
+    for(int l = 0; l < TABULEIRO; l++){
+    	for(int c = 1; c < TABULEIRO;){ 
+			if(c == 0) c++;
+            else if(matriz[l][c] != 0 && matriz[l][c-1] == 0){
+                matriz[l][c-1] = matriz[l][c];
+                matriz[l][c] = 0;
+                if(soma[c] == 1){
+                    soma[c] = 0;
+                    soma[c-1] = 0; 
+                }
+                c--;
+            }else if(soma[c-1] == 0 && matriz[l][c] != 0 && matriz[l][c] == matriz[l][c-1]){
+                matriz[l][c-1] *=2;
+                soma[c-1] = 1;
+                matriz[l][c] = 0;
+                c++;
+            }else{
+                c++;
+            }
+		}
+        for(int i = 0; i < 4; i++) soma[i] = 0;
+	}
+}
+
+void mover_direita (int matriz[][TABULEIRO]) {
+    int soma[] = {0, 0, 0, 0};
+	for(int l = 0; l < TABULEIRO; l++){
+    	for(int c = 2; c >= 0;){ 
+			if(c == 3) c--;
+            else if(matriz[l][c] != 0 && matriz[l][c+1] == 0){
+                matriz[l][c+1] = matriz[l][c];
+                matriz[l][c] = 0;
+                if(soma[c] == 1){
+                    soma[c] = 0;
+                    soma[c+1] = 1;
+                }
+                c++;
+            }else if(soma[c+1] == 0 && matriz[l][c] != 0 && matriz[l][c] == matriz[l][c+1]){
+                matriz[l][c+1] *=2;
+                matriz[l][c] = 0;
+                soma[c+1] = 1;
+                c--;
+            }else{
+                c--;    
+            }
+		}
+        for(int i = 0; i < 4; i++) soma[i] = 0;
+	}
+}
+
+void mover_cima (int matriz[][TABULEIRO]) {
+    int soma[] = {0, 0, 0, 0};
+    for(int c = 0; c < TABULEIRO; c++){
+    	for(int l = 1; l < TABULEIRO;){ 
+			if(l == 0) l++;
+            else if(matriz[l][c] != 0 && matriz[l-1][c] == 0){
+                matriz[l-1][c] = matriz[l][c];
+                matriz[l][c] = 0;
+                if(soma[l] = 1){
+                    soma[l-1] = 1;
+                    soma[l] = 0;
+                }
+                l--;
+            }else if(soma[l-1] == 0 && matriz[l][c] != 0 && matriz[l][c] == matriz[l-1][c]){
+                matriz[l-1][c] *=2;
+                matriz[l][c] = 0;
+                soma[l-1] = 1;
+                l++;
+            }else{
+                l++;
+            }
+		
+		}
+        for(int i = 0; i < 4; i++) soma[i] = 0;
+	}
+}
+
+void mover_baixo (int matriz[][TABULEIRO]) {
+    int soma[] = {0, 0, 0, 0};
+    for(int c = 0; c < TABULEIRO; c++){
+    	for(int l = 2; l >= 0;){ 
+			if(l == 3) l--;
+            else if(matriz[l][c] != 0 && matriz[l+1][c] == 0){
+                matriz[l+1][c] = matriz[l][c];
+                matriz[l][c] = 0;
+                if(soma[l] == 1){
+                    soma[l] = 0;
+                    soma[l+1] = 1;
+                }
+                l++;
+            }else if(soma[l+1] == 0 && matriz[l][c] != 0 && matriz[l][c] == matriz[l+1][c]){
+                matriz[l+1][c] *=2;
+                matriz[l][c] = 0;
+                soma[l+1] = 1;
+                l--;
+            }else{
+                l--;    
+            }
+		}
+        for(int i = 0; i < 4; i++) soma[i] = 0;
+	}            
 }
