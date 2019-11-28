@@ -197,7 +197,7 @@ void mover_cima (int matriz[][TABULEIRO]) {
             else if(matriz[l][c] != 0 && matriz[l-1][c] == 0){
                 matriz[l-1][c] = matriz[l][c];
                 matriz[l][c] = 0;
-                if(soma[l] = 1){
+                if(soma[l] == 1){
                     soma[l-1] = 1;
                     soma[l] = 0;
                 }
