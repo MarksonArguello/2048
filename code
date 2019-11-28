@@ -1,17 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#define TABULEIRO 4
 
-void incializar(int matriz[][4]);
-void mostrar(int matriz[][4]);
-void inserir_num(int matriz[][4], int aleatorio);
-int contar_vazios(int matriz[][4]);
+void incializar(int matriz[][TABULEIRO]);
+void mostrar(int matriz[][TABULEIRO]);
+void inserir_num(int matriz[][TABULEIRO], int aleatorio);
+int contar_vazios(int matriz[][TABULEIRO]);
 int aleatorio(int vazios);
-
+void mover_esquerda (int matriz[][TABULEIRO]); //funciona
+void mover_direita (int matriz[][TABULEIRO]);  //consertar
+void mover_cima (int matriz[][TABULEIRO]);     //consertar
+void mover_baixo (int matriz[][TABULEIRO]);    //consertar
 
 int main(void){
     system("clear");
-    int matriz[4][4], jogo = 0, l , c; 
+    int matriz[TABULEIRO][TABULEIRO], jogo = 0; 
     unsigned short vazios = 0, n, i;
     char jogada = ' ';
     srand(time(NULL));
@@ -50,97 +54,25 @@ int main(void){
             scanf("%c", &jogada);
             getchar();
         }
-        switch(jogada){ //fiquei confuso em relação aos argumentos das funções
+        switch(jogada){
             case 'W':
             case 'w':
-            for(c = 0; c < TABULEIRO; c++){
-            	for(l = 0; l < TABULEIRO; l++){
-					if(matriz[l][c] != 0){
-						int t_pos = l-1, num_pos = l, valor = matriz[l][c]; 
-						while(t_pos >= 0){                                  
-							if(matriz[t_pos][c] == 0){
-								matriz[t_pos][c] = matriz[num_pos][c];      
-								matriz[num_pos][c] = 0;
-								num_pos--;
-							} else if(matriz[t_pos][c] == valor) {
-								matriz[t_pos][c] += matriz[num_pos][c];
-								matriz[num_pos][c] = 0;                     
-								num_pos = t_pos;
-							}
-							t_pos--;
-						}
-					}
-				}
-        	}            
-            break;
+		mover_cima (matriz);           
+            	break;
             case 'A':
             case 'a':
-            for(l = 0; l < TABULEIRO; l++){
-            	for(c = 0; c < TABULEIRO; c++){ //checando cada coluna de cada linha
-					if(matriz[l][c] != 0){
-						int t_pos = c-1, num_pos = c, valor = matriz[l][c]; //variaveis temporarias para checagem da posição/valor do numero
-						while(t_pos >= 0){                                  //movimentar da posição anterior até a inicial na linha
-							if(matriz[l][t_pos] == 0){
-								matriz[l][t_pos] = matriz[l][num_pos];      //checa se é zero e substitui
-								matriz[l][num_pos] = 0;
-								num_pos--;
-							} else if(matriz[l][t_pos] == valor) {
-								matriz[l][t_pos] += matriz[l][num_pos];
-								matriz[l][num_pos] = 0;                     //checa se é igual e soma
-								num_pos = t_pos;
-							}
-							t_pos--;
-						}
-					}
-				}
-        	}
-            break;
+		mover_esquerda (matriz);
+            	break;
             case 'S':
             case 's':
-            for(c = 0; c < TABULEIRO-1; c++){
-            	for(l = 0; l < TABULEIRO; l++){
-					if(matriz[l][c] != 0){
-						int t_pos = l+1, num_pos = l, valor = matriz[l][c]; 
-						while(t_pos <= TABULEIRO){                                  
-							if(matriz[t_pos][c] == 0){
-								matriz[t_pos][c] = matriz[num_pos][c];      
-								matriz[num_pos][c] = 0;
-								num_pos++;
-							} else if(matriz[t_pos][c] == valor) {
-								matriz[t_pos][c] += matriz[num_pos][c];
-								matriz[num_pos][c] = 0;                     
-								num_pos = t_pos;
-							}
-							t_pos++;
-						}
-					}
-				}
-        	}               
-            break;
+		mover_baixo (matriz);             
+            	break;
             case 'D':
             case 'd':
-            for(l = 0; l < TABULEIRO; l++){
-            	for(c = 0; c < TABULEIRO; c++){ 
-					if(matriz[l][c] != 0){
-						int t_pos = c+1, num_pos = c, valor = matriz[l][c]; 
-						while(t_pos <= TABULEIRO-1){                                 
-							if(matriz[l][t_pos] == 0){
-								matriz[l][t_pos] = matriz[l][num_pos];      
-								matriz[l][num_pos] = 0;
-								num_pos++;
-							} else if(matriz[l][t_pos] == valor) {
-								matriz[l][t_pos] += matriz[l][num_pos];
-								matriz[l][num_pos] = 0;                     
-								num_pos = t_pos;
-							}
-							t_pos++;
-						}
-					}
-				}
-        	}            
-            break;
+		mover_direita (matriz);     
+            	break;
             default:
-            break;
+            	break;
         }
         
     }
@@ -149,36 +81,36 @@ int main(void){
     return 0;
 }
 
-void incializar(int matriz[][4]){
-    for(int l = 0; l < 4; l++){
-        for(int c = 0; c < 4; c++){
+void incializar(int matriz[][TABULEIRO]){
+    for(int l = 0; l < TABULEIRO; l++){
+        for(int c = 0; c < TABULEIRO; c++){
             matriz[l][c] = 0;
         }
     }
 }
 
-void mostrar(int matriz[][4]){
+void mostrar(int matriz[][TABULEIRO]){
     system("clear");
-    for(int l = 0; l < 4; l++){
-        for(int c = 0; c < 4; c++){
+    for(int l = 0; l < TABULEIRO; l++){
+        for(int c = 0; c < TABULEIRO; c++){
             printf("%d ",matriz[l][c]);
         }
         printf("\n");
     }
 }
 
-int contar_vazios(int matriz[][4]){
+int contar_vazios(int matriz[][TABULEIRO]){
     int vazios = 0;
-    for(int l = 0; l < 4; l++){
-        for(int c = 0; c < 4; c++){
+    for(int l = 0; l < TABULEIRO; l++){
+        for(int c = 0; c < TABULEIRO; c++){
             if(matriz[l][c] == 0) vazios ++; 
         } 
     }
     return vazios;   
 }
-void inserir_num(int matriz[][4], int aleatorio){
-    for(int l = 0; l < 4; l++){
-        for(int c = 0; c < 4; c++){
+void inserir_num(int matriz[][TABULEIRO], int aleatorio){
+    for(int l = 0; l < TABULEIRO; l++){
+        for(int c = 0; c < TABULEIRO; c++){
             
             if(matriz[l][c] == 0){
                 if(aleatorio == 0){
@@ -194,4 +126,89 @@ void inserir_num(int matriz[][4], int aleatorio){
 
 int aleatorio(int vazios){    
     return rand()%vazios;
+}
+
+void mover_esquerda (int matriz[][TABULEIRO]) {
+    for(int l = 0; l < TABULEIRO; l++){
+    	for(int c = 0; c < TABULEIRO; c++){ //checando cada coluna de cada linha
+			if(matriz[l][c] != 0){
+				int t_pos = c-1, num_pos = c, valor = matriz[l][c]; //variaveis temporarias para checagem da posição/valor do numero
+				while(t_pos >= 0){                                  //movimentar da posição anterior até a inicial na linha
+					if(matriz[l][t_pos] == 0){
+						matriz[l][t_pos] = matriz[l][num_pos];      //checa se é zero e substitui
+						matriz[l][num_pos] = 0;
+						num_pos--;
+					} else if(matriz[l][t_pos] == valor) {
+						matriz[l][t_pos] += matriz[l][num_pos];
+						matriz[l][num_pos] = 0;                     //checa se é igual e soma
+						num_pos = t_pos;
+					}
+					t_pos--;
+				}
+			}
+		}
+	}
+}
+void mover_direita (int matriz[][TABULEIRO]) {
+	for(int l = 0; l < TABULEIRO; l++){
+		for(int c = 0; c < TABULEIRO; c++){ 
+			if(matriz[l][c] != 0){
+				int t_pos = c+1, num_pos = c, valor = matriz[l][c]; 
+				while(t_pos <= TABULEIRO-1){                                 
+					if(matriz[l][t_pos] == 0){
+						matriz[l][t_pos] = matriz[l][num_pos];      
+						matriz[l][num_pos] = 0;
+						num_pos++;
+					} else if(matriz[l][t_pos] == valor) {
+						matriz[l][t_pos] += matriz[l][num_pos];
+						matriz[l][num_pos] = 0;                     
+						num_pos = t_pos;
+					}
+					t_pos++;
+				}
+			}
+		}
+	}  
+}
+void mover_cima (int matriz[][TABULEIRO]) {
+    for(int c = 0; c < TABULEIRO; c++){
+    	for(int l = 0; l < TABULEIRO; l++){
+			if(matriz[l][c] != 0){
+				int t_pos = l-1, num_pos = l, valor = matriz[l][c]; 
+				while(t_pos >= 0){                                  
+					if(matriz[t_pos][c] == 0){
+						matriz[t_pos][c] = matriz[num_pos][c];      
+						matriz[num_pos][c] = 0;
+						num_pos--;
+					} else if(matriz[t_pos][c] == valor) {
+						matriz[t_pos][c] += matriz[num_pos][c];
+						matriz[num_pos][c] = 0;                     
+						num_pos = t_pos;
+					}
+					t_pos--;
+				}
+			}
+		}
+	} 
+}
+void mover_baixo (int matriz[][TABULEIRO]) {
+    for(int c = 0; c < TABULEIRO-1; c++){
+    	for(int l = 0; l < TABULEIRO; l++){
+			if(matriz[l][c] != 0){
+				int t_pos = l+1, num_pos = l, valor = matriz[l][c]; 
+				while(t_pos <= TABULEIRO){                                  
+					if(matriz[t_pos][c] == 0){
+						matriz[t_pos][c] = matriz[num_pos][c];      
+						matriz[num_pos][c] = 0;
+						num_pos++;
+					} else if(matriz[t_pos][c] == valor) {
+						matriz[t_pos][c] += matriz[num_pos][c];
+						matriz[num_pos][c] = 0;                     
+						num_pos = t_pos;
+					}
+					t_pos++;
+				}
+			}
+		}
+	}               
 }
