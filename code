@@ -85,7 +85,7 @@ int main(void){
         mostrar(matriz, cor);
 
         // Verifica se há possibilidade de movimento
-        if(!verificar_movimento(matriz)){
+        if(vazios == 0 && !verificar_movimento(matriz)){
             printf("Você perdeu\n");
             printf("NOME: %s PONTUACAO: %d movimentos\n", p->nome, p->pontos);
             break;
