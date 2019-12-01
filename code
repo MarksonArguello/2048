@@ -53,7 +53,7 @@ int main(void){
     //---------------------
 
 	p = (JOGADOR *) malloc(sizeof(JOGADOR));		//inicializa um ponteiro para struct JOGADOR
-		if (!p) { 
+	if (!p) { 
 		printf("não foi possível criar espaço para jogador\n");
 		return 1;
 	}
@@ -83,11 +83,14 @@ int main(void){
 
         //Printa na tela o tabuleiro
         mostrar(matriz, cor);
+        
+        //verifica novamente a quantidade de vazios
+        vazios = contar_vazios(matriz);
 
         // Verifica se há possibilidade de movimento
-        if(vazios == 0 && !verificar_movimento(matriz)){
+        if(!verificar_movimento(matriz) && vazios == 0){
             printf("Você perdeu\n");
-            printf("NOME: %s PONTUACAO: %d movimentos\n", p->nome, p->pontos);
+            printf("NOME: %s\n PONTUACAO: %d movimentos\n", p->nome, p->pontos);
             break;
         }
 
@@ -404,12 +407,6 @@ int verificar_vitoria(int matriz[][TABULEIRO]){ //Função para verificar se o n
 
 void inserir_jogador (JOGADOR *p) {
 	printf("insira o nome do jogador\n");
-	gets(p->nome);
+	fgets(p->nome,40,stdin);
 	p->pontos = 0;
-}		
-		
-		
-		
-		
-
-
+}
