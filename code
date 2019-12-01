@@ -63,9 +63,11 @@ int main(void){
     //Esvazia o buffer
     while(getchar() !=  '\n');
     
-    inserir_jogador(p);
+    if (jogo =='1') {
+    	inserir_jogador(p);
+	}	
     
-    while(jogo == 1){
+    while(jogo == '1'){
 
         //Inserir numeros
         vazios = contar_vazios(matriz);
@@ -410,4 +412,10 @@ void inserir_jogador (JOGADOR *p) {
 	printf("insira o nome do jogador\n");
 	fgets(p->nome,40,stdin);
 	p->pontos = 0;
-}
+}		
+		
+		
+		
+		
+
+
